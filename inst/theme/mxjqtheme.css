@@ -1,0 +1,56 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header, .footer {
+  background-color: #004080;
+  color: white;
+  /* coder wechat AuTrader */
+  padding: 20px;
+  min-height: 10vh;
+  text-align: center;
+  border-radius: 8px;
+  margin: 20px;
+}
+
+.header h1 {
+  font-size: 36px; 
+  margin: 0;       
+}
+
+.content-area {
+  flex: 1;
+  padding: 20px;
+}
+.content-area h2 {
+  color: white;
+  padding: 10px 15px;
+  /* coder wechat AuTrader */
+  border-radius: 6px;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.col-title-1 { background-color: #f0ad4e; } 
+.col-title-2 { background-color: #5cb85c; } 
+
+.action-button-container {
+  text-align: center;
+}
+
+.action-button-container .btn {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}

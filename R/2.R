@@ -1,15 +1,29 @@
 #' @export
-mxjqshiny2 <- function(input,trainx,traindf,xat){
-  new_sample <-
-    data.frame(matrix(NA, nrow = 1, ncol = length(trainx)))
-  for (i in seq_along(trainx)) {
-    valuei <- input[[trainx[i]]]
-    # coder wechat AuTrader
-    new_sample[1, i] <- valuei
-  }
-  names(new_sample) <- trainx
-  new_sample <- new_sample %>%
-    select(colnames(traindf)[xat])
-  traindf2 <- rbind(traindf[,xat], new_sample)
-  return(list(new = new_sample, new2 = traindf2))
+mxjqshiny10 <- function (model, datax, datay, sampleat, whichc){
+  predictor_model <-
+    iml::Predictor$new(
+      model,
+      data = datax[-sampleat, ],
+      y = datay, predict.function = function(model, newdata) {
+        predict(model, newdata, type = "prob") %>%
+          rename_with(~gsub(".pred_", "", .x)) %>%
+          select(whichc)
+  }, type = "prob")
+  shap_model <-
+    iml::Shapley$new(
+      predictor_model,
+      x.interest = datax[sampleat, ]
+    )
+  shap_model$results %>%
+    mutate(pn = factor(sign(phi)),
+           ps = abs(phi),
+           feature.value = reorder(feature.value, ps)) %>%
+    ggplot(aes(x = phi, y = feature.value, fill = pn)) +
+    geom_col(show.legend = F) +
+    geom_vline(xintercept = 0) +
+    labs(x = "Shapley Value", y = "") +
+    theme_minimal() +
+    theme(text = element_text(size = 12))
 }
+
+

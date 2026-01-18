@@ -1,18 +1,15 @@
 #' @export
-mxjqshiny4 <- function(model, data, posi){
-  set.seed(42)
-  shapresult <- fastshap::explain(
-    model, X = data,
-    nsim = 10, adjust = T,
-    pred_wrapper = function(model, newdata){
-      predict(model, newdata, type = "prob") %>% 
-        # coder wechat AuTrader
-        select(all_of(paste0(".pred_", posi))) %>%
-        pull()
-    },
-    newdata = as.data.frame(data[nrow(data),]),
-    shap_only = F
-  )
-  return(shapresult)
+mxjqshiny2 <- function(input, trainx, traindf, xat){
+  new_sample <-
+    data.frame(matrix(NA, nrow = 1, ncol = length(trainx)))
+  for (i in seq_along(trainx)) {
+    valuei <- input[[trainx[i]]]
+    # coder wechat AuTrader
+    new_sample[1, i] <- valuei
+  }
+  names(new_sample) <- trainx
+  new_sample <- new_sample %>%
+    select(colnames(traindf)[xat])
+  traindf2 <- rbind(traindf[,xat], new_sample)
+  return(list(new = new_sample, new2 = traindf2))
 }
-

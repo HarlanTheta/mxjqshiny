@@ -1,15 +1,19 @@
 #' @export
-mxjqshiny5 <- function(model, datax, lvl){
-  explainer <- lime::lime(
-    datax,
-    lime::as_classifier(model, lvl)
+mxjqshiny3 <- function(model, data){
+  set.seed(42)
+  shapresult <- fastshap::explain(
+    model, 
+    X = data,
+    nsim = 10, 
+    adjust = T,
+    pred_wrapper = function(model, newdata){
+      predict(model, newdata) %>% 
+        pull()
+      # coder wechat AuTrader
+    },
+    newdata = as.data.frame(data[nrow(data),]),
+    shap_only = F
   )
-  explanation <- lime::explain(
-    datax[nrow(datax),], 
-    # coder wechat AuTrader
-    explainer, 
-    n_labels = 3, 
-    n_features = ncol(datax)
-  )
-  return(explanation)
+  return(shapresult)
 }
+
